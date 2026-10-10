@@ -1,0 +1,8 @@
+export enum GamePhase {
+    LOBBY = 'LOBBY',
+    ROLE_ASSIGNMENT = 'ROLE_ASSIGNMENT',
+    MISSION = 'MISSION',
+    DISCUSSION = 'DISCUSSION',
+    VOTING = 'VOTING',
+    FINISHED = 'FINISHED',
+}
