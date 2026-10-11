@@ -5,18 +5,20 @@ export interface LobbyPlayer {
     isAlive: boolean;
 }
 
+export interface GameSettings {
+    minPlayers: number;
+    maxPlayers: number;
+    numberOfTraitors: number;
+    discussionTimeSeconds: number;
+    votingTimeSeconds: number;
+}
+
 export interface LobbyData {
     id: string;
     code: string;
     phase: GamePhase;
     players: LobbyPlayer[];
-    settings: {
-        minPlayers: number;
-        maxPlayers: number;
-        numberOfTraitors: number;
-        discussionTimeSeconds: number;
-        votingTimeSeconds: number;
-    }
+    settings: GameSettings;
 }
 
 type GamePhase =

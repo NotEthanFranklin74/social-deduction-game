@@ -121,6 +121,9 @@ const statusText = computed(() => {
 .player-info {
     flex: 1;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .player-name-row {
@@ -150,6 +153,8 @@ const statusText = computed(() => {
     margin: 0.3rem 0 0;
     color: #aaa;
     font-size: 0.8rem;
+    line-height: 1.2;
+    min-height: 1em;
 }
 
 .selection-indicator {

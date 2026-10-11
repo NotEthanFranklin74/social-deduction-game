@@ -39,7 +39,6 @@
                         v-for="player in lobbyData.players"
                         :key="player.id"
                         :player="player"
-                        :selectable="true"
                         :selected="selectedPlayerId === player.id"
                         :show-ready-status="true"
                         @select="selectedPlayerId = player.id"
@@ -52,55 +51,7 @@
             </div>
 
             <div class="panel settings-panel">
-                <h2>Game Settings</h2>
-
-                <label>
-                    Minimum Players
-                    <input 
-                        v-model="lobbyData.settings.minPlayers"
-                        type="number"
-                        min="2"
-                        :max="lobbyData.settings.maxPlayers"
-                    />
-                </label>
-
-                <label>
-                    Maximum Players
-                    <input 
-                        v-model="lobbyData.settings.maxPlayers"
-                        type="number"
-                        :min="lobbyData.settings.minPlayers"
-                        max="15"
-                    />
-                </label>
-
-                <label>
-                    Number of Traitors
-                    <input 
-                        v-model="lobbyData.settings.numberOfTraitors"
-                        type="number"
-                        min="1"
-                        :max="Math.max(1, lobbyData.players.length - 2)"
-                    />
-                </label>
-
-                <label>
-                    Discussion Time (seconds)
-                    <input 
-                        v-model="lobbyData.settings.discussionTimeSeconds"
-                        type="number"
-                        min="60"
-                    />
-                </label>
-
-                <label>
-                    Voting Time (seconds)
-                    <input 
-                        v-model="lobbyData.settings.votingTimeSeconds"
-                        type="number"
-                        min="60"
-                    />
-                </label>
+                <GameSettingsPanel v-model="lobbyData.settings" />
 
                 <button 
                     class="primary-button"
@@ -122,6 +73,7 @@
 import { computed, ref } from 'vue';
 import type { LobbyData } from '../types/game';
 import PlayerCard from '../components/PlayerCard.vue';
+import GameSettingsPanel from '../components/GameSettingsPanel.vue';
 
 const selectedPlayerId = ref<string | null>(null);
 
