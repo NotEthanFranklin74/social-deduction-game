@@ -9,7 +9,7 @@
 
             <div class="game-code">
                 <span>GAME CODE</span>
-                <strong>{{ gameCode }}</strong>
+                <strong>{{ lobbyData.code }}</strong>
             </div>
         </header>
 
@@ -17,16 +17,16 @@
             <div class="panel players-panel">
                 <div class="panel-heading">
                     <h2>Players</h2>
-                    <span>{{  players.length  }} / {{  settings.maxPlayers  }}</span>
+                    <span>{{  lobbyData.players.length - 1  }} / {{  lobbyData.settings.maxPlayers  }}</span>
                 </div>
 
-                <div v-if="players.length === 0" class="empty-state">
+                <div v-if="lobbyData.players.length === 0" class="empty-state">
                     <p>No players have joined yet.</p>
                     <p>Share the game code to invite them.</p>
                 </div>
 
                 <ul v-else class="player-list">
-                    <li v-for="player in players" :key="player.id">
+                    <li v-for="player in lobbyData.players" :host="player.isHost">
                         <div class="avatar">
                             {{  player.name.charAt(0).toUpperCase()  }}
                         </div>
@@ -48,19 +48,19 @@
                 <label>
                     Minimum Players
                     <input 
-                        v-model="settings.minPlayers"
+                        v-model="lobbyData.settings.minPlayers"
                         type="number"
                         min="2"
-                        :max="settings.maxPlayers"
+                        :max="lobbyData.settings.maxPlayers"
                     />
                 </label>
 
                 <label>
                     Maximum Players
                     <input 
-                        v-model="settings.maxPlayers"
+                        v-model="lobbyData.settings.maxPlayers"
                         type="number"
-                        :min="settings.minPlayers"
+                        :min="lobbyData.settings.minPlayers"
                         max="15"
                     />
                 </label>
@@ -68,17 +68,17 @@
                 <label>
                     Number of Traitors
                     <input 
-                        v-model="settings.numberOfTraitors"
+                        v-model="lobbyData.settings.numberOfTraitors"
                         type="number"
                         min="1"
-                        :max="Math.max(1, players.length - 1)"
+                        :max="Math.max(1, lobbyData.players.length - 2)"
                     />
                 </label>
 
                 <label>
                     Discussion Time (seconds)
                     <input 
-                        v-model="settings.discussionTimeSeconds"
+                        v-model="lobbyData.settings.discussionTimeSeconds"
                         type="number"
                         min="60"
                     />
@@ -87,7 +87,7 @@
                 <label>
                     Voting Time (seconds)
                     <input 
-                        v-model="settings.votingTimeSeconds"
+                        v-model="lobbyData.settings.votingTimeSeconds"
                         type="number"
                         min="60"
                     />
@@ -110,42 +110,39 @@
 </template>
 
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue';
+import { computed, ref } from 'vue';
+import type { LobbyData } from '../types/game';
 
-interface LobbyPlayer {
-    id: string;
-    name: string;
-    isHost: boolean;
-}
-
-const gameCode = ref('ABCD12');
-
-const players = ref<LobbyPlayer[]>([
-    { id: '1', name: 'Max', isHost: true },
-    { id: '2', name: 'Emmie', isHost: false },
-    { id: '3', name: 'Megan', isHost: false },
-    { id: '4', name: 'Mum', isHost: false },
-    { id: '5', name: 'Dad', isHost: false },
-    { id: '6', name: 'Kira', isHost: false },
-    { id: '7', name: 'Jamie', isHost: false },
-]);
-
-const settings = reactive({
-    minPlayers: 6,
-    maxPlayers: 15,
-    numberOfTraitors: 2,
-    discussionTimeSeconds: 300,
-    votingTimeSeconds: 90,
+const lobbyData = ref<LobbyData>({
+    id: 'game-1',
+    code: 'ABCD12',
+    phase: 'LOBBY',
+    players: [
+        { id: '1', name: 'Max', isHost: true },
+        { id: '2', name: 'Emmie', isHost: false },
+        { id: '3', name: 'Megan', isHost: false },
+        { id: '4', name: 'Mum', isHost: false },
+        { id: '5', name: 'Dad', isHost: false },
+        { id: '6', name: 'Kira', isHost: false },
+        { id: '7', name: 'Jamie', isHost: false },
+    ],
+    settings: { 
+        minPlayers: 6,
+        maxPlayers: 15,
+        numberOfTraitors: 2,
+        discussionTimeSeconds: 300,
+        votingTimeSeconds: 90,
+    }
 });
 
 const canStart = computed(() => {
     return (
-        players.value.length >= settings.minPlayers &&
-        players.value.length <= settings.maxPlayers &&
-        settings.numberOfTraitors >= 1 &&
-        settings.numberOfTraitors < players.value.length &&
-        settings.discussionTimeSeconds >= 60 &&
-        settings.votingTimeSeconds >= 60
+        lobbyData.value.players.length >= lobbyData.value.settings.minPlayers + 1 &&
+        lobbyData.value.players.length <= lobbyData.value.settings.maxPlayers &&
+        lobbyData.value.settings.numberOfTraitors >= 1 &&
+        lobbyData.value.settings.numberOfTraitors < lobbyData.value.players.length &&
+        lobbyData.value.settings.discussionTimeSeconds >= 60 &&
+        lobbyData.value.settings.votingTimeSeconds >= 60
     );
 });
 
@@ -263,6 +260,7 @@ h2 {
 
 .host-label {
     margin-left: auto;
+    margin-right: 20px;
     color: #e3c66d;
     font-size: 0.7rem;
 }
