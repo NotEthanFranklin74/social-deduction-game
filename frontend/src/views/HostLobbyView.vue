@@ -26,7 +26,7 @@
                 </div>
 
                 <ul v-else class="player-list">
-                    <li v-for="player in lobbyData.players" :host="player.isHost">
+                    <li v-for="player in lobbyData.players">
                         <div class="avatar">
                             {{  player.name.charAt(0).toUpperCase()  }}
                         </div>
