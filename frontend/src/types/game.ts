@@ -2,6 +2,7 @@ export interface LobbyPlayer {
     id: string;
     name: string;
     isHost: boolean;
+    isAlive: boolean;
 }
 
 export interface LobbyData {

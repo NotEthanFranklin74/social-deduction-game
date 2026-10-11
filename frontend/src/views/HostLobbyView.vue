@@ -26,7 +26,7 @@
                 </div>
 
                 <ul v-else class="player-list">
-                    <li v-for="player in lobbyData.players">
+                    <!--<li v-for="player in lobbyData.players">
                         <div class="avatar">
                             {{  player.name.charAt(0).toUpperCase()  }}
                         </div>
@@ -34,7 +34,16 @@
                         <span v-if="player.isHost" class="host-label">
                             HOST
                         </span>
-                    </li>
+                    </li>-->
+                    <PlayerCard
+                        v-for="player in lobbyData.players"
+                        :key="player.id"
+                        :player="player"
+                        :selectable="true"
+                        :selected="selectedPlayerId === player.id"
+                        :show-ready-status="true"
+                        @select="selectedPlayerId = player.id"
+                    />
                 </ul>
 
                 <p class="hint">
@@ -112,19 +121,22 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import type { LobbyData } from '../types/game';
+import PlayerCard from '../components/PlayerCard.vue';
+
+const selectedPlayerId = ref<string | null>(null);
 
 const lobbyData = ref<LobbyData>({
     id: 'game-1',
     code: 'ABCD12',
     phase: 'LOBBY',
     players: [
-        { id: '1', name: 'Max', isHost: true },
-        { id: '2', name: 'Emmie', isHost: false },
-        { id: '3', name: 'Megan', isHost: false },
-        { id: '4', name: 'Mum', isHost: false },
-        { id: '5', name: 'Dad', isHost: false },
-        { id: '6', name: 'Kira', isHost: false },
-        { id: '7', name: 'Jamie', isHost: false },
+        { id: '1', name: 'Max', isHost: true, isAlive: true },
+        { id: '2', name: 'Emmie', isHost: false, isAlive: true },
+        { id: '3', name: 'Megan', isHost: false, isAlive: false },
+        { id: '4', name: 'Mum', isHost: false, isAlive: true },
+        { id: '5', name: 'Dad', isHost: false, isAlive: true },
+        { id: '6', name: 'Kira', isHost: false, isAlive: true },
+        { id: '7', name: 'Jamie', isHost: false, isAlive: true },
     ],
     settings: { 
         minPlayers: 6,
@@ -236,34 +248,9 @@ h2 {
 }
 
 .player-list {
-    padding: 0;
-    list-style: none;
-}
-
-.player-list li {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-    padding: 0.8rem 0;
-    border-bottom: 1px solid #333139;
-}
-
-.avatar {
     display: grid;
-    place-items: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #39323a;
-    color: #e3c66d;
-    font-weight: 700;
-}
-
-.host-label {
-    margin-left: auto;
-    margin-right: 20px;
-    color: #e3c66d;
-    font-size: 0.7rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+    gap: 1rem;
 }
 
 .settings-panel label {
