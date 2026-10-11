@@ -137,6 +137,7 @@ const lobbyData = ref<LobbyData>({
 
 const canStart = computed(() => {
     return (
+        lobbyData.value.phase === 'LOBBY' &&
         lobbyData.value.players.length >= lobbyData.value.settings.minPlayers + 1 &&
         lobbyData.value.players.length <= lobbyData.value.settings.maxPlayers &&
         lobbyData.value.settings.numberOfTraitors >= 1 &&

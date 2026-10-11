@@ -7,7 +7,7 @@ export interface LobbyPlayer {
 export interface LobbyData {
     id: string;
     code: string;
-    phase: string;
+    phase: GamePhase;
     players: LobbyPlayer[];
     settings: {
         minPlayers: number;
@@ -17,3 +17,12 @@ export interface LobbyData {
         votingTimeSeconds: number;
     }
 }
+
+type GamePhase =
+    | 'LOBBY'
+    | 'ROLE_ASSIGNMENT'
+    | 'STARTED'
+    | 'MISSION'
+    | 'DISCUSSION'
+    | 'VOTING'
+    | 'FINISHED'
